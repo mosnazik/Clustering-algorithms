@@ -41,7 +41,7 @@ public:
 private:
     int N1;
 };
-class Point
+class Point //class Tochka
 {
 
 public:
