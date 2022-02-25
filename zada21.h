@@ -17,7 +17,7 @@ public:
     int operator[](const int k);
     void operator+=(const int k);
 };
-class Matrix //class matrix
+class Matrix //klass khraneniya matritsy lyubogo razmera
 {
 
 public:
@@ -30,7 +30,7 @@ private:
     int N1;
 
 };
-class Matrix_dist
+class Matrix_dist  //klass khraneniya matritsy rasstoyaniy
 {
 
 public:
@@ -41,7 +41,7 @@ public:
 private:
     int N1;
 };
-class Point //class Tochka
+class Point //klass tochki khranit dve koordinaty i znacheniye. nomer tochki. mozhet ikh izmenyat
 {
 
 public:
@@ -62,6 +62,8 @@ private:
 	int Num;
 };
 class Cloud
+//klass khraneniya mnozhestva ssylok tochek v pole. mozhet pechatat oblako iskat ekstremumy. sozdavat tochku. khranit
+//ekstremumy tsentr i dispersii. esli ne iz bufera
 {
 public:
 	std::vector<Point*> m_Point;
@@ -84,15 +86,17 @@ private:
 	int N_points;
 };
 class Buffer
+//klass dlya izmeneniya oblaka. zagruzhayet oblako v vide mnozhestva tochek. izmenyayet ego cherez sdvig. povorot.
+//masshtabirovaniye. vygruzhayet v novoye oblako
 {
 public:
 	Buffer();
 	Point O;
 	int getN();
 	std::vector<Point> m2_Point;
-	int rotateCl(float ang);
-	int shift(float ox, float oy);
-	int zoom(float ly);
+	int rotateCl(float ang);         //povorot
+	int shift(float ox, float oy);   //sdvig
+	int zoom(float ly);              //mashtab
 	int copyCl(Cloud* n_Cloud);
 	int upload();
 private:
@@ -100,6 +104,8 @@ private:
     bool Status_Work;
 };
 class Field
+//klass v kotorom khranitsya mnozhestvo tochek. gruppirovka ikh po oblakam. mozhet raspechatyvat oblako ili pole.
+//dobavlyat oblako. sokhranyat matritsu rasstoyaniy. nakhodit rasstoyaniye mezhdu tochkami
 {
 public:
     std::vector<Cloud> m1_Cloud;
@@ -114,13 +120,13 @@ public:
 	int getN();
 	int work();
     int savematrix_dist();
-    float rastpoint(int n1, int n2);
+    float rastpoint(int n1, int n2); //poisk rastoyanitya ot tochki n1 do n2
 private:
 	int N_clouds;
 	int N_points;
 	bool Status_Work;
 };
-class Cluster
+class Cluster // klass khranyashchiy ssylki na mnozhestvo tochek klastera. takzhe ego tsentr. ekstremumy. kol-vo tochek. mozhet raspechatat tochki
 {
 
 public:
@@ -129,8 +135,8 @@ public:
 	int Print_Cluster(std::ofstream& outdata);
     int SetP(int N1);
     int getN();
-    void getekstr(float &max1,float &max2,float &min1,float &min2);
-	int searchekstr();
+    void getekstr(float &max1,float &max2,float &min1,float &min2); //vozvrashenie ekstremuma
+	int searchekstr(); //poisk ekstremuma
 	Point O;
 private:
     float maxx1;
@@ -141,7 +147,7 @@ private:
 
 };
 
-class Wave_alg
+class Wave_alg //vypolnyayet volnovoy algoritm
 {
 
 public:
@@ -161,7 +167,7 @@ private:
 	int N_points;
 
 };
-class k_means
+class k_means  // vypolnyayet algorit k srednikh
 {
 public:
     Field* m_Field;
@@ -180,7 +186,7 @@ private:
 	int N_points;
 
 };
-class EM
+class EM  //vypolnyayet EM algoritm
 {
 public:
     Field* m_Field;
@@ -207,7 +213,7 @@ private:
 	int N_points;
 
 };
-class DBScan
+class DBScan //vypolnyayet algoritm DBScan. to est nakhoditsya nuzhnoye mnozhestvo. zatem s nim vypolnyayetsya volnovoy algoritm
 {
 
 public:
@@ -223,7 +229,7 @@ private:
 	int N_points;
 
 };
-class Histogramm
+class Histogramm // klass. stroyashchiy gistogrammu
 {
 
 public:
@@ -240,7 +246,7 @@ private:
 	int NQ;
 	float recQ;
 };
-class Min_tree
+class Min_tree  //vypolnyayet algoritm minimalnogo pokryvayushchego dereva. zatem po nemu stroit Histogramm
 {
 
 public:
@@ -260,14 +266,14 @@ private:
 	int N_cluster;
 
 };
-class Launch
+class Launch  //klass zapuskov metodov klassternogo analiza EM.k_means.Min_tree.DBScan.Wave_alg. pechatayet klastery i vydayet po nim informatsiyu
 {
 
 public:
     Histogramm* m1_Histogramm;
     Launch();
 	Launch(float delt, int k1);
-	int Start_alg(int n);
+	int Start_alg(int n); //start odnogo iz algoritmov 1 - wave, 2 - dbscan, 3,4 - min derevo, 5 - k means, 6 - EM
     std::vector<Cluster*> m1_Cluster;
     Wave_alg m_Wave_alg;
     DBScan m_DBScan;
@@ -287,7 +293,7 @@ private:
 	int N_points;
 
 };
-class Controller
+class Controller //poluchennyye komandy otpravlyayet libo v Buffer. Field. Launch dlya ikh realizatsii
 {
 
 public:
@@ -312,14 +318,14 @@ public:
 private:
 	bool Status_Work;
 };
-class Interface
+class Interface //klass otvechayet za raspaznovaniye komand i otpravleniye ikh v Controller. takzhe chitayet config help fayly
 {
 public:
 	Interface();
 	~Interface(){}
 	Controller m_Controller;
-	int Starts();
-	bool command(std::string strcomm, std::string config, std::ofstream& logfile);
+	int Starts(); //start
+	bool command(std::string strcomm, std::string config, std::ofstream& logfile); //chtenie command
 };
 //void inversion(float **A, int N);
 //void jacobi ( const unsigned int n,float **a, std::vector<float> d,float **v );

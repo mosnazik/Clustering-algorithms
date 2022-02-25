@@ -1,0 +1,2 @@
+reset
+plot 'hist.txt' with boxes

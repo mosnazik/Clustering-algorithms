@@ -1,0 +1,49 @@
+Schitana commanda:run
+Schitana commanda:generate_cloud
+Schitani parametri:1 0 0 1 0.5 150
+Schitana commanda:generate_cloud
+Schitani parametri:2 -0.6 0.5 1 0.5 250
+Schitana commanda:BUFFER_ADD_CLOUD
+Schitani parametri:1
+Schitana commanda:BUFFER_SHIFT_CLOUD
+Schitani parametri:0.6 0.6
+Schitana commanda:BUFFER_TURN_CLOUD
+Schitani parametri:-0.785398
+Schitana commanda:BUFFER_UPLOAD_CLOUD
+Schitani parametri:3
+Schitana commanda:BUFFER_ADD_CLOUD
+Schitani parametri:1
+Schitana commanda:BUFFER_SHIFT_CLOUD
+Schitani parametri:0 1
+Schitana commanda:BUFFER_TURN_CLOUD
+Schitani parametri:0.785398
+Schitana commanda:BUFFER_UPLOAD_CLOUD
+Schitani parametri:4
+Schitana commanda:BUFFER_ADD_CLOUD
+Schitani parametri:1
+Schitana commanda:BUFFER_SHIFT_CLOUD
+Schitani parametri:0.5 1.5
+Schitana commanda:BUFFER_TURN_CLOUD
+Schitani parametri:-1.508
+Schitana commanda:BUFFER_UPLOAD_CLOUD
+Schitani parametri:5
+Schitana commanda:print_field
+Schitana commanda:INFO_ALL
+Schitana commanda:help
+Schitana commanda:wave
+Schitani parametri:0.095
+Schitana commanda:info_cluster
+Schitana commanda:print_cluster
+Schitana commanda:dbscan
+Schitani parametri:0.09 2
+Schitana commanda:info_cluster
+Schitana commanda:print_cluster
+Schitana commanda:kmeans
+Schitani parametri:6
+Schitana commanda:info_cluster
+Schitana commanda:print_cluster
+Schitana commanda:EM
+Schitani parametri:6
+Schitana commanda:info_cluster
+Schitana commanda:print_cluster
+Schitana commanda:exit

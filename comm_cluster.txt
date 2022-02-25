@@ -1,0 +1,22 @@
+reset
+set xtics font ",14"
+set ytics font ",14"
+set key title font ",20"
+set xrange [-3:3]
+set yrange [-3:3]
+set isosample 200, 200
+unset surface
+set contour base
+set cntrparam levels 1
+set cntrparam levels discrete 0
+f1(x,y) = 32.3*(x-(-0.08117))*(x-(-0.08117))+(9.229)*(x-(-0.08117))*(y-(-0.02304))+(124)*(y-(-0.02304))*(y-(-0.02304))-(7.519)
+f2(x,y) = 39.55*(x-(-0.6516))*(x-(-0.6516))+(-9.718)*(x-(-0.6516))*(y-(0.4755))+(112.4)*(y-(0.4755))*(y-(0.4755))-(14.01)
+f3(x,y) = 1.244e+07*(x-(-0.6285))*(x-(-0.6285))+(-3.346e+05)*(x-(-0.6285))*(y-(0.4339))+(2251)*(y-(0.4339))*(y-(0.4339))-(2.22)
+f4(x,y) = 73.63*(x-(0.5574))*(x-(0.5574))+(-90.23)*(x-(0.5574))*(y-(0.5261))+(80.6)*(y-(0.5261))*(y-(0.5261))-(7.585)
+f5(x,y) = 82.74*(x-(-0.07507))*(x-(-0.07507))+(90.18)*(x-(-0.07507))*(y-(1.043))+(73.45)*(y-(1.043))*(y-(1.043))-(7.535)
+f6(x,y) = 121.7*(x-(0.5175))*(x-(0.5175))+(-20.47)*(x-(0.5175))*(y-(1.415))+(33.92)*(y-(1.415))*(y-(1.415))-(7.52)
+set table 'test.dat'
+splot f1(x,y),f2(x,y),f3(x,y),f4(x,y),f5(x,y),f6(x,y)
+unset table
+plot 'EMcluster.txt' with points palette pt 5,'cloud.txt' with points palette pt 6,'cluster1.txt' with points palette pt 6,'cluster2.txt' with points palette pt 6,\
+'cluster4.txt' with points palette pt 6,'cluster5.txt' with points palette pt 6,'test.dat' w l

@@ -1,0 +1,9 @@
+reset
+set term gif animate delay 20
+set output "animate.gif"
+FILE(i) = sprintf("multik%d.txt", i)
+set xrange [-3:3]
+set yrange [-3:3]
+do for [i=0:50] {
+	plot FILE(i) with points palette
+}

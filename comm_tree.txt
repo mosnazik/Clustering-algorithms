@@ -1,0 +1,4 @@
+reset
+plot  'pnts.txt' u 1:2 with lines,\
+'pnts.txt' u 1:2:(0.005) with circles fill solid,\
+'cluster3.txt' with points palette pt 13

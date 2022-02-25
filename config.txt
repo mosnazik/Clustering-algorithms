@@ -1,0 +1,7 @@
+LogInter:log2.txt;
+Cloudtxt:cloud.txt;
+Commandtxt:input.txt;
+Clustertxt:cluster.txt;
+Histtxt:hist.txt;
+treetxt:pnts.txt;
+LogRec:1;

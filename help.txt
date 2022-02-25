@@ -1,0 +1,25 @@
+HELP 									|give information about commands
+EXIT 									|exit from programm
+GENERATE_CLOUD:int numcl_float x_float y_float dispx_float dispy_int n  |create cloud with O(x,y), num points - n,
+ 									|disp - dispx and dispy
+PRINT_FIELD:Name.txt 							|print field to fail Name.txt
+PRINT_CLOUD:int n_Name.txt 						|print cloud number n to fail Name.txt
+BUFFER_ADD_CLOUD:int n							|add cloud with number n in buffer
+BUFFER_SHIFT_CLOUD:float x_float y 					|move cloud by vector(x,y)
+BUFFER_TURN_CLOUD:float ang 						|turn cloud an angle ang
+BUFFER_COMPRESSION_CLOUD:float ly					|squeezes cloud on ly
+BUFFER_UPLOAD_CLOUD:int n						|add cloud in field with number n 
+INFO									|give info about field
+INFO_ALL								|give all info about field
+INFO_CLUSTER:int n							|give all info about clusters alg n
+WAVE:float d								|do volnovoy algoritm s parametrom d
+DBSCAN:float d, int k							|do  algoritm dbscan s parametrami d and k
+RUN:Name.txt								|zapuskaet commandniy fail Name.txt
+PRINT_CLUSTER:int n_Name.txt 						|print cloud number n to fail Name.txt
+MIN_TREE								|do min tree
+PRINT_TREE:int n_Name.txt						|print min tree number n to fail Name.txt
+HISTOGRAMM:int n_int nq							|do histogramm number n with param nq
+PRINT_HISTOGRAMM:int n_Name.txt						|print histogramm number n to fail Name.txt
+KMEANS:int k								|do algoritm k srednih s parametrom k
+EM:int k								|do EM algoritm s parametrom k
+
