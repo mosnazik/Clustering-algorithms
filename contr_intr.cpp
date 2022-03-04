@@ -115,6 +115,14 @@ int Controller::EM(int k){ //sozdaet EM c parametrom k
     m_Launch[n].Start_alg(6);
     return 0;
 }
+int Controller::Hierarchical(int k){ //sozdaet Hierarchical c parametrom k
+    int n;
+    m_Launch.push_back(Launch(0.0,k));
+    n = m_Launch.size();
+    m_Launch[n-1].m_Hierarchical.m_Field=&m_Field;
+    m_Launch[n-1].Start_alg(7);
+    return 0;
+}
 Interface::Interface(){
 }
 int Interface::Starts(){ //function interface
@@ -569,6 +577,20 @@ bool Interface::command(std::string strcomm, std::string config, std::ofstream& 
                 {logfile<<"Schitani parametri:"<<stoi(k)<<std::endl;}
             m_Controller.m_Field.savematrix_dist();
             m_Controller.EM(std::stoi(k));
+            return true;
+        }
+        if((comm=="hierarchical")||(comm=="HIERARCHICAL"))
+        {
+            std::string k;
+            while(i<int(strcomm.length()))
+            {
+                k.push_back(strcomm[i]);
+                i=i+1;
+            }
+            if(LogOn==true)
+                {logfile<<"Schitani parametri:"<<stoi(k)<<std::endl;}
+            m_Controller.m_Field.savematrix_dist();
+            m_Controller.Hierarchical(std::stoi(k));
             return true;
         }
         if((comm=="HISTOGRAMM")||(comm=="histogramm"))

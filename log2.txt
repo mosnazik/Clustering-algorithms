@@ -30,20 +30,6 @@ Schitani parametri:5
 Schitana commanda:print_field
 Schitana commanda:INFO_ALL
 Schitana commanda:help
-Schitana commanda:wave
-Schitani parametri:0.095
-Schitana commanda:info_cluster
-Schitana commanda:print_cluster
-Schitana commanda:dbscan
-Schitani parametri:0.09 2
-Schitana commanda:info_cluster
-Schitana commanda:print_cluster
-Schitana commanda:kmeans
-Schitani parametri:6
-Schitana commanda:info_cluster
-Schitana commanda:print_cluster
-Schitana commanda:EM
-Schitani parametri:6
-Schitana commanda:info_cluster
-Schitana commanda:print_cluster
+Schitana commanda:hierarchical
+Schitani parametri:2
 Schitana commanda:exit

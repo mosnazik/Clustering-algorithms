@@ -22,4 +22,5 @@ HISTOGRAMM:int n_int nq							|do histogramm number n with param nq
 PRINT_HISTOGRAMM:int n_Name.txt						|print histogramm number n to fail Name.txt
 KMEANS:int k								|do algoritm k srednih s parametrom k
 EM:int k								|do EM algoritm s parametrom k
+HIERARCHICAL:int k						|k - vid poiska svyazi k=1,2,3 do HIERARCHICAL algoritm
 

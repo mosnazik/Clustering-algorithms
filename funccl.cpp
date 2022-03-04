@@ -271,6 +271,9 @@ int Field::createcloud(float ox, float oy,float xdisper, float ydisper, int num)
 }
 int Field::Print_Field(std::ofstream& outdata){ //pechataet field
     int i;
+    for(i=0; i<N_points;i++){
+        log1<<m1_Point[i].getx1()<<'\t'<<m1_Point[i].getx2()<<std::endl;
+    }
     for(i=0; i<N_clouds;i++){
         m1_Cloud[i].Print_Cloud(outdata,i);
     }

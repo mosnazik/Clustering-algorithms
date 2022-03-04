@@ -121,6 +121,16 @@ int Launch::Start_alg(int n){  // zapusk volnovogo algoritma
         }
         return 0;
     }
+    if(n==7){
+        m_Hierarchical.copy_matr();
+        m_Hierarchical.Start_alg(k);
+        N_points=m_Hierarchical.getN();
+        N_cluster=m_Hierarchical.getCl();
+        for(i=0;i< N_cluster;i++){
+            m1_Cluster.push_back(&m_Hierarchical.m_Cluster[i]);
+        }
+        return 0;
+    }
     if(LogOn==true)
         {log1<<"Finish algoritm"<<std::endl;}
     return 0;
@@ -856,7 +866,6 @@ int EM::Start_alg(int k){ //zapusk EM algoritma
         m_Cluster[N_cluster-1].searchekstr();
         m_Cluster[N_cluster-1].O.newpoint(centrs[2*i],centrs[2*i+1]);
     }
-    //razl();
 
     for(m=0;m<k;m++){
         float dist=0.0;
@@ -873,74 +882,7 @@ int EM::Start_alg(int k){ //zapusk EM algoritma
 
     return 0;
 }
-/*
-int EM::razl(){
-    int i,j,m;
-    std::vector<float> d1;
-    std::vector<float> d2;
-    float **E1 = new float *[m_Field->getN()];
 
-    for (int i = 0; i < m_Field->getN(); i++){
-        E1[i] = new float [m_Field->getN()];
-        d1.push_back(0);
-    }
-    float **E2 = new float *[k1];
-
-    for (int i = 0; i < k1; i++){
-        E2[i] = new float [k1];
-        d2.push_back(0);
-    }
-    float **v1 = new float *[m_Field->getN()];
-
-    for (int i = 0; i < m_Field->getN(); i++)
-        v1[i] = new float [m_Field->getN()];
-    float **v2 = new float *[k1];
-
-    for (int i = 0; i < k1; i++)
-        v2[i] = new float [k1];
-    for(i=0;i<m_Field->getN();i++){
-            for(j=0;j<m_Field->getN();j++){
-                E1[i][j]=0.0;
-                for(m=0;m<k1;m++){
-                    E1[i][j]=E1[i][j]+m_Matrix.Mat[m].m[i]*m_Matrix.Mat[m].m[j];
-                }
-            }
-    }
-    for(i=0;i<k1;i++){
-            for(j=0;j<k1;j++){
-                E2[i][j]=0.0;
-                for(m=0;m<m_Field->getN();m++){
-                    E2[i][j]=E2[i][j]+m_Matrix.Mat[i].m[m]*m_Matrix.Mat[j].m[m];
-                }
-            }
-    }
-//    jacobi(m_Field->getN(),E1,d1,v1);
-//    inversion(v1,m_Field->getN());
-//    jacobi(k1,E2,d2,v2);
-//    inversion(v2,k1);
-    for(i=0;i<k1;i++){
-        for(j=0;j<k1;j++){
-            log1<<v2[j][i]<<" ";
-        }
-        log1<<std::endl;
-    }
-    for(j=0;j<m_Field->getN();j++){
-        log1<<d1[j]<<std::endl;
-    }
-    for(i=0;i<=k1;i++){
-        delete v2[i];
-        delete E2[i];
-    }
-    for(i=0;i<m_Field->getN();i++){
-        delete v1[i];
-        delete E1[i];
-    }
-    delete [] E1;
-    delete [] E2;
-    delete [] v1;
-    delete [] v2;
-    return 0;
-}*/
 float EM::prov(){ //poisk proverochnogo virageniya
     int m, i;
     float prover=0.0, sym1;
@@ -979,155 +921,197 @@ int EM::getN(){return N_points;} //Vozvrashaet kol-vo tochek
 int EM::getCl(){return N_cluster;} //Vozvrashaet kol-vo clusterov
 int EM::SetCluster(int N1){N_cluster=N1;return 0;} //redactiruet kol-vo clusterov
 int EM::SetP(int N1){N_points=N1;return 0;}  //redactiruet kol-vo tochek
-/*void jacobi ( const unsigned int n,float **a, std::vector<float> d,float **v )
-{
-    if ( n == 0 ) return;
-    float * b = new float[n+n];
-    float * z = b + n;
-    unsigned int i, j;
-    for ( i = 0; i < n; ++i )
+
+int Hierarchical::copy_matr(){
+    int i,j;
+    m_Matrix.setN(m_Field->getN());
+    m_Matrix.Mat.clear();
+    for(i=0;i<m_Field->getN();i++)
     {
-        z[i] = 0.;
-        b[i] = d[i] = a[i][i];
-        for ( j = 0; j < n; ++j )
+        m_Matrix.Mat.push_back(arr());
+    }
+    for(i=0;i<m_Field->getN();i++)
+    {
+        for(j=0;j<m_Field->getN();j++)
         {
-            v[i][j] = i == j ? 1. : 0.;
+            m_Matrix.Mat[i].m.push_back(0);
         }
     }
-    for ( i = 0; i < 200; ++i )
+    for(i=0;i<m_Field->getN();i++)
     {
-        float sm = 0.;
-        unsigned int p, q;
-        for ( p = 0; p < n - 1; ++p )
+        for(j=0;j<m_Field->getN();j++)
         {
-            for ( q = p + 1; q < n; ++q )
-            {
-                sm += fabs ( a[p][q] );
-            }
+            m_Matrix.Mat[i].m[j]=m_Field->m_Matrix_dist.Mat_dist[i*m_Field->getN()+j];
         }
-        if ( sm == 0 ) break;
-        const float tresh = i < 3 ? 0.2 * sm / ( n*n ) : 0.;
-        for ( p = 0; p < n - 1; ++p )
-        {
-            for ( q = p + 1; q < n; ++q )
+    }
+    return 0;
+}
+Hierarchical::Hierarchical(){N_points=0;N_cluster=0;}
+int Hierarchical::Start_alg(int k){
+    int numk=0;
+    copy_matr();
+    while((m_Field->getN()-numk)>1){
+        int i,j, mini, minj;
+        float dist=100.0;
+        for(i=0;i<m_Field->getN()+numk;i++){
+            for(j=i+1;j<m_Field->getN()+numk;j++)
             {
-                const float g = 1e12 * fabs ( a[p][q] );
-                if ( i >= 3 && fabs ( d[p] ) > g && fabs ( d[q] ) > g ) a[p][q] = 0.;
-                else
-                if ( fabs ( a[p][q] ) > tresh )
-                {
-                    const float theta = 0.5 * ( d[q] - d[p] ) / a[p][q];
-                    float t = 1. / ( fabs(theta) + sqrt(1.+theta*theta) );
-                    if ( theta < 0 ) t = - t;
-                    const float c = 1. / sqrt ( 1. + t*t );
-                    const float s = t * c;
-                    const float tau = s / ( 1. + c );
-                    const float h = t * a[p][q];
-                    z[p] -= h;
-                    z[q] += h;
-                    d[p] -= h;
-                    d[q] += h;
-                    a[p][q] = 0.;
-                    for ( j = 0; j < p; ++j )
-                    {
-                        const float g = a[j][p];
-                        const float h = a[j][q];
-                        a[j][p] = g - s * ( h + g * tau );
-                        a[j][q] = h + s * ( g - h * tau );
-                    }
-                    for ( j = p+1; j < q; ++j )
-                    {
-                        const float g = a[p][j];
-                        const float h = a[j][q];
-                        a[p][j] = g - s * ( h + g * tau );
-                        a[j][q] = h + s * ( g - h * tau );
-                    }
-                    for ( j = q+1; j < n; ++j )
-                    {
-                        const float g = a[p][j];
-                        const float h = a[q][j];
-                        a[p][j] = g - s * ( h + g * tau );
-                        a[q][j] = h + s * ( g - h * tau );
-                    }
-                    for ( j = 0; j < n; ++j )
-                    {
-                        const float g = v[j][p];
-                        const float h = v[j][q];
-                        v[j][p] = g - s * ( h + g * tau );
-                        v[j][q] = h + s * ( g - h * tau );
-                    }
+                if ((m_Matrix.Mat[i].m[j]<dist)&&(m_Matrix.Mat[i].m[i]>-1.0)&&(m_Matrix.Mat[j].m[j]>-1.0)){
+                    dist=m_Matrix.Mat[i].m[j];
+                    mini=i;
+                    minj=j;
                 }
             }
         }
-        for ( p = 0; p < n; ++p )
+        numk++;
+        number.push_back(m_Field->getN()-1+numk);
+        number.push_back(mini);
+        number.push_back(minj);
+        for(int m1=0;m1<m_Field->getN();m1++)
         {
-            d[p] = ( b[p] += z[p] );
-            z[p] = 0.;
-        }
-    }
-    delete[] b;
-}
-void inversion(float **A, int N)
-{
-    float temp;
-
-    float **E = new float *[N];
-
-    for (int i = 0; i < N; i++)
-        E[i] = new float [N];
-
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < N; j++)
-        {
-            E[i][j] = 0.0;
-
-            if (i == j)
-                E[i][j] = 1.0;
-        }
-
-    for (int k = 0; k < N; k++)
-    {
-        temp = A[k][k];
-
-        for (int j = 0; j < N; j++)
-        {
-            A[k][j] /= temp;
-            E[k][j] /= temp;
-        }
-
-        for (int i = k + 1; i < N; i++)
-        {
-            temp = A[i][k];
-
-            for (int j = 0; j < N; j++)
-            {
-                A[i][j] -= A[k][j] * temp;
-                E[i][j] -= E[k][j] * temp;
+            if(m_Field->m1_Point[m1].getN()==mini){
+                mini=m1;
+            }
+            if(m_Field->m1_Point[m1].getN()==minj){
+                minj=m1;
             }
         }
-    }
+        float a1=0.0,a2=0.0,a3=0.0,a4=0.0;
+        if(mini>m_Field->getN()-1){
+            if(minj>m_Field->getN()-1){
 
-    for (int k = N - 1; k > 0; k--)
-    {
-        for (int i = k - 1; i >= 0; i--)
-        {
-            temp = A[i][k];
-
-            for (int j = 0; j < N; j++)
-            {
-                A[i][j] -= A[k][j] * temp;
-                E[i][j] -= E[k][j] * temp;
+                a1=coord[(mini-m_Field->getN())*2];
+                a2=coord[(mini-m_Field->getN())*2+1];
+                a3=coord[(minj-m_Field->getN())*2];
+                a4=coord[(minj-m_Field->getN())*2+1];
+            }
+            else{
+                a1=coord[(mini-m_Field->getN())*2];
+                a2=coord[(mini-m_Field->getN())*2+1];
+                a3=m_Field->m1_Point[minj].getx1();
+                a4=m_Field->m1_Point[minj].getx2();
             }
         }
+        else{
+            if(minj>m_Field->getN()-1){
+                a3=coord[(minj-m_Field->getN())*2];
+                a4=coord[(minj-m_Field->getN())*2+1];
+                a1=m_Field->m1_Point[mini].getx1();
+                a2=m_Field->m1_Point[mini].getx2();
+            }
+            else{
+                a1=m_Field->m1_Point[mini].getx1();
+                a2=m_Field->m1_Point[mini].getx2();
+                a3=m_Field->m1_Point[minj].getx1();
+                a4=m_Field->m1_Point[minj].getx2();
+            }
+        }
+        log1<<a1<<" "<<a2<<" 0"<<std::endl;
+        log1<<a3<<" "<<a4<<" 0"<<std::endl;
+        coord.push_back((a1+a3)/2.0);
+        coord.push_back((a2+a4)/2.0);
+        log1<<std::endl;
+        m_Matrix.Mat[mini].m[mini]=-1;
+        m_Matrix.Mat[minj].m[minj]=-1;
+        //log1<<numk<<std::endl;
+        m_Matrix.Mat.push_back(arr());
+        for(j=0;j<m_Field->getN()-1+numk;j++)
+        {
+            m_Matrix.Mat[j].m.push_back(0);
+        }
+        for(j=0;j<m_Field->getN()-1+numk;j++)
+        {
+            m_Matrix.Mat[m_Field->getN()-1+numk].m.push_back(0);
+        }
+        for(j=0;j<m_Field->getN()+numk;j++)
+        {
+            float rast=poisk_rast(k,j,m_Field->getN()+numk-1);
+            m_Matrix.Mat[j].m[m_Field->getN()+numk-1]=rast;
+            m_Matrix.Mat[m_Field->getN()+numk-1].m[j]=rast;
+        }
     }
-
-    for (int i = 0; i < N; i++)
-        for (int j = 0; j < N; j++)
-            A[i][j] = E[i][j];
-
-    for (int i = 0; i < N; i++)
-        delete [] E[i];
-
-    delete [] E;
+    return 0;
 }
-*/
+float Hierarchical::poisk_rast(int k, int n, int m){
+    if(n==m){
+        return 0.0;
+    }
+    if(k==1){
+        if(m_Matrix.Mat[n].m[m]<eps){
+            if(n>=m_Field->getN()){
+                float rast1,rast2;
+                rast1=poisk_rast(1,number[(n-m_Field->getN())*3+1],m);
+                rast2=poisk_rast(1,number[(n-m_Field->getN())*3+2],m);
+                if(rast1>rast2){
+                    return rast2;
+                }
+                else{return rast1;}
+            }
+            if(m>=m_Field->getN()){
+                float rast1,rast2;
+                rast1=poisk_rast(1,number[(m-m_Field->getN())*3+1],n);
+                rast2=poisk_rast(1,number[(m-m_Field->getN())*3+2],n);
+                if(rast1>rast2){
+                    return rast2;
+                }
+                else{return rast1;}
+            }
+        }
+        else{return m_Matrix.Mat[n].m[m];}
+    }
+    if(k==2){
+        if(m_Matrix.Mat[n].m[m]<eps){
+            if(n>=m_Field->getN()){
+                float rast1,rast2;
+                rast1=poisk_rast(1,number[(n-m_Field->getN())*3+1],m);
+                rast2=poisk_rast(1,number[(n-m_Field->getN())*3+2],m);
+                if(rast1>rast2){
+                    return rast1;
+                }
+                else{return rast2;}
+            }
+            if(m>=m_Field->getN()){
+                float rast1,rast2;
+                rast1=poisk_rast(1,number[(m-m_Field->getN())*3+1],n);
+                rast2=poisk_rast(1,number[(m-m_Field->getN())*3+2],n);
+                if(rast1>rast2){
+                    return rast1;
+                }
+                else{return rast2;}
+            }
+        }
+        else{return m_Matrix.Mat[n].m[m];}
+
+    }
+    if(k==3){
+        if(m_Matrix.Mat[n].m[m]<eps){
+            if(n>=m_Field->getN()){
+                float rast1,rast2;
+                rast1=poisk_rast(1,number[(n-m_Field->getN())*3+1],m);
+                rast2=poisk_rast(1,number[(n-m_Field->getN())*3+2],m);
+                return((rast1+rast2)/2);
+            }
+            if(m>=m_Field->getN()){
+                float rast1,rast2;
+                rast1=poisk_rast(1,number[(m-m_Field->getN())*3+1],n);
+                rast2=poisk_rast(1,number[(m-m_Field->getN())*3+2],n);
+                return((rast1+rast2)/2);
+            }
+        }
+        else{return m_Matrix.Mat[n].m[m];}
+
+    }
+    return -1;
+}
+int Hierarchical::getN(){
+    return N_points;
+}
+int Hierarchical::getCl(){
+    return N_cluster;
+}
+int Hierarchical::SetCluster(int N1){
+    N_cluster=N1;return 0;
+}
+int Hierarchical::SetP(int N1){
+    N_points=N1;return 0;
+}
