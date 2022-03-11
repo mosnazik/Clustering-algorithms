@@ -312,9 +312,9 @@ int Field::savematrix_dist(){ //sozdaet matrix rastoyaniy
         }
     }
     if(LogOn==true){
-        for(i=0;i<100;i++)
+        for(i=0;i<20;i++)
         {
-            for(j=0;j<100;j++)
+            for(j=0;j<20;j++)
             {
                 if(m_Matrix_dist.Mat_dist[i*N_points+j]<0.00001){
                     log1.width(8);

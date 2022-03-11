@@ -926,15 +926,15 @@ int Hierarchical::copy_matr(){
     int i,j;
     m_Matrix.setN(m_Field->getN());
     m_Matrix.Mat.clear();
-    for(i=0;i<m_Field->getN();i++)
+    for(i=0;i<2*(m_Field->getN());i++)
     {
         m_Matrix.Mat.push_back(arr());
     }
-    for(i=0;i<m_Field->getN();i++)
+    for(i=0;i<2*(m_Field->getN());i++)
     {
-        for(j=0;j<m_Field->getN();j++)
+        for(j=0;j<2*(m_Field->getN());j++)
         {
-            m_Matrix.Mat[i].m.push_back(0);
+            m_Matrix.Mat[i].m.push_back(0.0);
         }
     }
     for(i=0;i<m_Field->getN();i++)
@@ -956,7 +956,7 @@ int Hierarchical::Start_alg(int k){
         for(i=0;i<m_Field->getN()+numk;i++){
             for(j=i+1;j<m_Field->getN()+numk;j++)
             {
-                if ((m_Matrix.Mat[i].m[j]<dist)&&(m_Matrix.Mat[i].m[i]>-1.0)&&(m_Matrix.Mat[j].m[j]>-1.0)){
+                if ((m_Matrix.Mat[i].m[j]<dist)&&(m_Matrix.Mat[i].m[i]>-1.0)&&(m_Matrix.Mat[j].m[j]>-1.0)&&(i!=j)){
                     dist=m_Matrix.Mat[i].m[j];
                     mini=i;
                     minj=j;
@@ -1014,15 +1014,6 @@ int Hierarchical::Start_alg(int k){
         m_Matrix.Mat[mini].m[mini]=-1;
         m_Matrix.Mat[minj].m[minj]=-1;
         //log1<<numk<<std::endl;
-        m_Matrix.Mat.push_back(arr());
-        for(j=0;j<m_Field->getN()-1+numk;j++)
-        {
-            m_Matrix.Mat[j].m.push_back(0);
-        }
-        for(j=0;j<m_Field->getN()-1+numk;j++)
-        {
-            m_Matrix.Mat[m_Field->getN()-1+numk].m.push_back(0);
-        }
         for(j=0;j<m_Field->getN()+numk;j++)
         {
             float rast=poisk_rast(k,j,m_Field->getN()+numk-1);
@@ -1063,8 +1054,8 @@ float Hierarchical::poisk_rast(int k, int n, int m){
         if(m_Matrix.Mat[n].m[m]<eps){
             if(n>=m_Field->getN()){
                 float rast1,rast2;
-                rast1=poisk_rast(1,number[(n-m_Field->getN())*3+1],m);
-                rast2=poisk_rast(1,number[(n-m_Field->getN())*3+2],m);
+                rast1=poisk_rast(2,number[(n-m_Field->getN())*3+1],m);
+                rast2=poisk_rast(2,number[(n-m_Field->getN())*3+2],m);
                 if(rast1>rast2){
                     return rast1;
                 }
@@ -1072,8 +1063,8 @@ float Hierarchical::poisk_rast(int k, int n, int m){
             }
             if(m>=m_Field->getN()){
                 float rast1,rast2;
-                rast1=poisk_rast(1,number[(m-m_Field->getN())*3+1],n);
-                rast2=poisk_rast(1,number[(m-m_Field->getN())*3+2],n);
+                rast1=poisk_rast(2,number[(m-m_Field->getN())*3+1],n);
+                rast2=poisk_rast(2,number[(m-m_Field->getN())*3+2],n);
                 if(rast1>rast2){
                     return rast1;
                 }
@@ -1087,14 +1078,14 @@ float Hierarchical::poisk_rast(int k, int n, int m){
         if(m_Matrix.Mat[n].m[m]<eps){
             if(n>=m_Field->getN()){
                 float rast1,rast2;
-                rast1=poisk_rast(1,number[(n-m_Field->getN())*3+1],m);
-                rast2=poisk_rast(1,number[(n-m_Field->getN())*3+2],m);
+                rast1=poisk_rast(3,number[(n-m_Field->getN())*3+1],m);
+                rast2=poisk_rast(3,number[(n-m_Field->getN())*3+2],m);
                 return((rast1+rast2)/2);
             }
             if(m>=m_Field->getN()){
                 float rast1,rast2;
-                rast1=poisk_rast(1,number[(m-m_Field->getN())*3+1],n);
-                rast2=poisk_rast(1,number[(m-m_Field->getN())*3+2],n);
+                rast1=poisk_rast(3,number[(m-m_Field->getN())*3+1],n);
+                rast2=poisk_rast(3,number[(m-m_Field->getN())*3+2],n);
                 return((rast1+rast2)/2);
             }
         }
