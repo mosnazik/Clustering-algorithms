@@ -948,11 +948,13 @@ int Hierarchical::copy_matr(){
 }
 Hierarchical::Hierarchical(){N_points=0;N_cluster=0;}
 int Hierarchical::Start_alg(int k){
-    int numk=0;
+    int numk=0, mink=0,numcl=0;
     copy_matr();
+    float minim=1000000.0,rast_b=10.0;
+    std::vector<int> points;
     while((m_Field->getN()-numk)>1){
         int i,j, mini, minj;
-        float dist=100.0;
+        float dist=100.0,rast_a;
         for(i=0;i<m_Field->getN()+numk;i++){
             for(j=i+1;j<m_Field->getN()+numk;j++)
             {
@@ -1011,8 +1013,8 @@ int Hierarchical::Start_alg(int k){
         coord.push_back((a1+a3)/2.0);
         coord.push_back((a2+a4)/2.0);
         log1<<std::endl;
-        m_Matrix.Mat[mini].m[mini]=-1;
-        m_Matrix.Mat[minj].m[minj]=-1;
+        m_Matrix.Mat[mini].m[mini]=-numk;
+        m_Matrix.Mat[minj].m[minj]=-numk;
         //log1<<numk<<std::endl;
         for(j=0;j<m_Field->getN()+numk;j++)
         {
@@ -1020,8 +1022,67 @@ int Hierarchical::Start_alg(int k){
             m_Matrix.Mat[j].m[m_Field->getN()+numk-1]=rast;
             m_Matrix.Mat[m_Field->getN()+numk-1].m[j]=rast;
         }
+        rast_a=m_Matrix.Mat[minj].m[mini];
+        if((rast_b*1.2<rast_a)&&(numk<(m_Field->getN()-1)&&(rast_a>0.01))){
+                points.clear();
+                std::cout<<numk<<" "<<rast_b<<"-"<<rast_a<<std::endl;
+                numcl=numk;
+                for(j=0;j<m_Field->getN()+numk+1;j++)
+                {
+                    if (m_Matrix.Mat[j].m[j]>-1.0){
+                        points.push_back(j);
+                    }
+                }
+        }
+        rast_b=rast_a;
+        float amin = poisk_cluster(numk);
+        if(amin<minim){
+                minim=amin;
+                mink=numk;
+                //std::cout<<"min: "<<minim<<std::endl;
+        }
+    }
+    for(int j=0;j<m_Field->getN()-numcl+1;j++)
+    {
+        m_Cluster.push_back(Cluster());
+        N_cluster++;
+    }
+    for(int j=0;j<m_Field->getN()-numcl+1;j++)
+    {
+        addpoint(j,points[j]);
+    }
+    std::cout<<points.size()<<" "<<mink<<"+"<<numcl<<std::endl;
+    return 0;
+}
+int Hierarchical::addpoint(int clus, int num){
+    if(num>=m_Field->getN()){
+        addpoint(clus,number[(num-m_Field->getN())*3+1]);
+        addpoint(clus,number[(num-m_Field->getN())*3+2]);
+    }
+    else{
+        for(int m1=0;m1<m_Field->getN();m1++)
+        {
+            if(m_Field->m1_Point[m1].getN()==num){
+                m_Cluster[clus].m_Point.push_back(&m_Field->m1_Point[m1]);
+                m_Cluster[clus].SetP(m_Cluster[clus].getN()+1);
+                N_points++;
+            }
+        }
     }
     return 0;
+}
+float Hierarchical::poisk_cluster(int numk){
+    float rast=0.0;
+    int i,j;
+    for(i=0;i<m_Field->getN()+numk;i++){
+            for(j=i+1;j<m_Field->getN()+numk;j++)
+            {
+                if (((m_Matrix.Mat[i].m[i]<0.0)&&(m_Matrix.Mat[j].m[j]<0.0)&&(i<m_Field->getN())&&(j<m_Field->getN()))||((m_Matrix.Mat[i].m[i]>-1.0)&&(m_Matrix.Mat[j].m[j]>-1.0))){
+                    rast=rast+m_Matrix.Mat[i].m[j];
+                }
+            }
+        }
+    return rast;
 }
 float Hierarchical::poisk_rast(int k, int n, int m){
     if(n==m){

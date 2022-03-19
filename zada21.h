@@ -278,6 +278,8 @@ public:
 	Hierarchical();
 	int Start_alg(int k);  //start Hierarchical
 	float poisk_rast(int k, int n, int m);
+	float poisk_cluster(int numk);
+	int addpoint(int clus, int num);
     int getN();
     int getCl();
     int SetCluster(int N1);
